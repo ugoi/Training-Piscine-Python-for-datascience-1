@@ -1,5 +1,6 @@
 from PIL import Image
 from numpy import asarray
+import numpy as np
 import matplotlib.pyplot as plt
 from load_image import ft_load
 
@@ -30,8 +31,9 @@ if __name__ == "__main__":
         grayscale_img = img.convert("L")
         img_array = asarray(grayscale_img)
         cropped_img = center_crop(img_array, 400)
-        print(f"New shape after slicing: {cropped_img.shape}")
-        print(cropped_img)
+        cropped_img_3d = cropped_img[:, :, np.newaxis]
+        print(f"New shape after slicing: {cropped_img_3d.shape}")
+        print(cropped_img_3d)
         plt.figure(figsize=(8, 8))
         plt.imshow(cropped_img, cmap='gray')
         plt.show()
