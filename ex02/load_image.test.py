@@ -12,8 +12,9 @@ class TestFtLoadFunction(unittest.TestCase):
         
     # Test invalid image path
     def test_invalid_image_path(self):
-        result = ft_load("nonexistent.jpg")
-        self.assertIn("Error:", result)
+        with self.assertRaises(Exception) as context:
+            ft_load("nonexistent.jpg")
+        self.assertIn("Error:", str(context.exception))
         
     # Test non-JPG/JPEG formats
     def test_non_jpg_format(self):
@@ -24,8 +25,9 @@ class TestFtLoadFunction(unittest.TestCase):
     def test_invalid_format(self):
         with open("test.txt", "w") as f:
             f.write("This is not an image")
-        result = ft_load("test.txt")
-        self.assertIn("Error:", result)
+        with self.assertRaises(Exception) as context:
+            ft_load("test.txt")
+        self.assertIn("Error:", str(context.exception))
 
 # This allows the tests to be run from the command line using python -m unittest test_load_image.py
 if __name__ == "__main__":
