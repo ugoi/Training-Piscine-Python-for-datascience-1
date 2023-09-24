@@ -1,45 +1,39 @@
 from PIL import Image
-from numpy import asarray, newaxis
+from numpy import asarray
 import matplotlib.pyplot as plt
 from load_image import ft_load
 
 
-def crop_image(img: Image.Image, zoom_size=(400, 400)) -> Image.Image:
-    """Crop the center of an image using Pillow."""
-    width, height = img.size
-    left = (width - zoom_size[0]) // 2
-    top = (height - zoom_size[1]) // 2
-    right = left + zoom_size[0]
-    bottom = top + zoom_size[1]
-    return img.crop((left, top, right, bottom))
+def center_crop(img_array, desired_size):
+    """
+    Center crop an image array to the specified size.
 
+    Parameters:
+    - img_array (numpy.ndarray): Input image array.
+    - desired_size (int): Desired size for both height and width after
+cropping.
 
-def convert_to_grayscale(img: Image.Image) -> asarray:
-    """Convert an image to grayscale using Pillow and maintain 3D shape."""
-    grayscale_img = img.convert("L")
-    grayscale_array = asarray(grayscale_img)
-    grayscale_array = grayscale_array[:, :, newaxis]
-    return grayscale_array
-
-
-def display_image_with_scale(img_array):
-    """Display the image with scale on x and y axes."""
-    fig, ax = plt.subplots(figsize=(8, 8))
-    ax.imshow(img_array.squeeze(), cmap='gray')
-    ax.set_xticks(range(0, img_array.shape[1], 50))
-    ax.set_yticks(range(0, img_array.shape[0], 50))
-    plt.show()
+    Returns:
+    - numpy.ndarray: Center-cropped image array.
+    """
+    offset_x = (img_array.shape[0] - desired_size) // 2
+    offset_y = (img_array.shape[1] - desired_size) // 2
+    return img_array[offset_x:offset_x+desired_size,
+                     offset_y:offset_y+desired_size]
 
 
 if __name__ == "__main__":
     try:
         img_array = ft_load("animal.jpeg")
+        print(img_array)
         img = Image.fromarray(img_array)
-        print(asarray(img))
-        cropped_img = crop_image(img)
-        grayscale_array_3d = convert_to_grayscale(cropped_img)
-        print(f"New shape after slicing: {grayscale_array_3d.shape}")
-        print(grayscale_array_3d)
-        display_image_with_scale(grayscale_array_3d)
+        grayscale_img = img.convert("L")
+        img_array = asarray(grayscale_img)
+        cropped_img = center_crop(img_array, 400)
+        print(f"New shape after slicing: {cropped_img.shape}")
+        print(cropped_img)
+        plt.figure(figsize=(8, 8))
+        plt.imshow(cropped_img, cmap='gray')
+        plt.show()
     except Exception as e:
         print(str(e))
