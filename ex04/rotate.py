@@ -43,8 +43,8 @@ def main():
     img_array = ft_load("animal.jpeg")
     print(img_array)
 
-    if len(img_array.shape) == 3 and img_array.shape[2] > 1:
-        img_array = img_array[:, :, 0]
+    if len(img_array.shape) == 3 and img_array.shape[2] == 1:
+        img_array = img_array.squeeze(-1)
 
     cropped_img = center_crop(img_array, 400)
 
